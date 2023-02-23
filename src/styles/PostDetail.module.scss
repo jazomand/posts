@@ -1,0 +1,50 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top: 10%;
+}
+.body {
+  padding: 20px;
+}
+
+.bodyContent {
+  display: flex;
+  justify-content: center;
+}
+
+.content {
+  border: 1px solid black;
+}
+
+.titleContainer {
+  border: 1px solid wheat
+}
+.title {
+  margin: 10px;
+  font-size: 2rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+}
+.backButtonContainer {
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+}
+.backButton {
+  display: block;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: wheat;
+    text-decoration: underline;
+    color:  #ffffff;
+  }
+}
+
