@@ -1,38 +1,60 @@
-import Link from 'next/link';
-import { Post } from '../types/post';
+import { AnimatePresence, motion } from 'framer-motion';
+import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
+import PostsComponent from '../components/Posts';
+import { Post } from '@/types/post';
 import { fetchPosts } from './api/posts';
-import styles from '../styles/Home.module.scss';
-import PageTransition from '../components/PageTransition';
+import { useState } from 'react';
+import PostComponent from '@/components/Post';
 
-type Props = {
+interface Props {
   posts: Post[];
-};
-
-function Home({ posts }: Props) {
-
-  return posts ? (
-    <PageTransition>
-     <div className={`${styles.container}`}>
-      <div className={styles.title}>Posts</div>
-      <ul className={styles.postList}>
-        {posts.map((post) => (
-          <li key={post.id} className={styles.postItem}>
-            <Link href={`/posts/${post.id}`}>
-              {post.title}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
-    </PageTransition>
-  ) : null;
 }
 
-export async function getServerSideProps() {
+export default function PostsPage({ posts }: Props) {
+  
+  const [selectedPost, setSelectedPost] = useState<Post | undefined>(undefined);
+
+  const handlePostClick = (post: Post) => {
+    setSelectedPost(post);
+  };
+
+  const handleBackClick = () => {
+    setSelectedPost(undefined);
+  };
+
+  return (
+    <AnimatePresence>
+      {selectedPost ? (
+        <motion.div key="post" initial={{ opacity: 0 }} animate={{
+          opacity: 1, transition: {
+            duration: 1,
+            delay: 0.2,
+            ease: 'easeInOut',
+          }
+        }} exit={{ opacity: 0 }}>
+          <PostComponent post={selectedPost} onBackClick={handleBackClick} />
+        </motion.div>
+      ) : (
+        <motion.div key="index" initial={{ opacity: 0 }} animate={{
+          opacity: 1, transition: {
+            duration: 1,
+            delay: 0.2,
+            ease: 'easeInOut',
+          }
+        }} exit={{ opacity: 0 }}>
+          <PostsComponent posts={posts} onPostClick={handlePostClick} />
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const posts = await fetchPosts();
   return {
-    props: { posts },
+    props: {
+      posts,
+    },
   };
-}
-
-export default Home;
+};
